@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Voiceover Pro - Verynt Pro</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navbar Header -->
+    <header class="header">
+      <div class="logo-area">
+        <span class="logo-icon">🗣️</span>
+        <h1>Verynt <span class="accent-text">VoicePro</span></h1>
+        <span class="badge">100% Client-Side TTS Compiler</span>
+      </div>
+      <nav class="navigation">
+        <a href="http://localhost:80" class="back-link">← Portal Hub</a>
+      </nav>
+    </header>
+
+    <!-- Main Workspace Split -->
+    <main class="main-split">
+      
+      <!-- Control Panel (Left Pane) -->
+      <section class="control-panel glass-card">
+        <div class="panel-section">
+          <h2>1. Synthesis Engine</h2>
+          <div class="input-group">
+            <label for="engine-select">Engine Configuration</label>
+            <select id="engine-select">
+              <option value="neural" selected>🌟 Neural API (Human-Sounding Preview)</option>
+              <option value="wasm">🔌 WebAssembly meSpeak (Offline WAV Exporter)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2>2. Voice Profile</h2>
+          <div class="input-group">
+            <label for="voice-select">Available Voice Profiles</label>
+            <select id="voice-select">
+              <!-- Dynamically populated by window.speechSynthesis -->
+              <option value="default">Detecting System Voices...</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h2>3. Narration Settings</h2>
+          
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="range-rate">Speech Rate (Speed)</label>
+              <span id="val-rate">1.0x</span>
+            </div>
+            <input type="range" id="range-rate" min="0.5" max="2.5" step="0.1" value="1.0">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="range-pitch">Voice Pitch Tone</label>
+              <span id="val-pitch">1.0x</span>
+            </div>
+            <input type="range" id="range-pitch" min="0.5" max="2.0" step="0.1" value="1.0">
+          </div>
+
+          <div class="slider-group">
+            <div class="slider-header">
+              <label for="range-volume">Output Volume</label>
+              <span id="val-volume">90%</span>
+            </div>
+            <input type="range" id="range-volume" min="0" max="100" step="5" value="90">
+          </div>
+        </div>
+
+        <!-- Carbon Display Ad Sponsor Widget -->
+        <div class="carbon-ad-widget">
+          <div class="carbon-ad-badge">SPONSORED</div>
+          <div class="carbon-ad-content">
+            <div class="carbon-ad-image-placeholder">🗣️</div>
+            <div class="carbon-ad-text">
+              <strong>Need Pro Narration?</strong> Convert full eBooks into voiceovers. High-speed local WASM.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Workspace Area (Right Pane) -->
+      <section class="workspace-area">
+        <div class="workspace-card glass-card">
+          <div class="workspace-header">
+            <div class="workspace-title">
+              <span class="status-indicator active"></span>
+              <h3>Studio Script Canvas</h3>
+            </div>
+            <div class="workspace-actions">
+              <span class="badge" id="stats-badge">Words: 15 | Characters: 98</span>
+            </div>
+          </div>
+
+          <!-- Script Studio Mixing Area -->
+          <div class="script-studio-viewport" id="script-studio-viewport">
+            
+            <!-- Standard Script Text Area Editor -->
+            <textarea id="script-input" placeholder="Enter your narration script here. Click 'Play Speech' to hear a high-quality preview, or click 'Download WAV' to compile a lossless voiceover audio stem offline..."></textarea>
+            
+            <!-- Floating word highlight visualizer overlay (displayed only during active speech) -->
+            <div class="highlight-overlay" id="highlight-overlay" style="display: none;">
+              <div class="highlight-close" id="btn-close-highlight">❌ Close Preview</div>
+              <div class="highlight-content" id="highlight-text-content">
+                <!-- Spoken words injected and highlighted dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- Loader / Compiler Status Overlay -->
+            <div class="processing-overlay" id="processing-overlay" style="display: none;">
+              <div class="processing-content">
+                <div class="loader-spinner"></div>
+                <h3>Compiling vocal waveform...</h3>
+                <p>Generating phonemes and synthesizing PCM samples via WebAssembly...</p>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Transport Toolbar & Action buttons -->
+          <div class="action-bar-layout">
+            <!-- Synced transport -->
+            <div class="transport-bar">
+              <button class="transport-btn" id="btn-play" title="Play Voiceover">▶ PLAY</button>
+              <button class="transport-btn" id="btn-pause" title="Pause Voiceover">⏸ PAUSE</button>
+              <button class="transport-btn" id="btn-stop" title="Stop Voiceover">⏹ STOP</button>
+            </div>
+            
+            <!-- Exporter buttons -->
+            <div class="exporters-bar">
+              <button class="btn btn-secondary" id="btn-copy">
+                📋 Copy Script
+              </button>
+              <button class="btn btn-accent btn-large" id="btn-download">
+                💾 Download Lossless WAV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Status Details Bar -->
+        <div class="status-bar-box glass-card">
+          <div class="status-item">
+            <span class="dot green"></span>
+            <span>Neural Voice Synthesizer: <strong id="engine-status">Active (Browser-Native)</strong></span>
+          </div>
+          <div class="status-item">
+            <span>Compiler Mode: <strong id="compiler-status">WAV serialization supported</strong></span>
+          </div>
+          <div class="status-item">
+            <span>Processing Cost: <strong>$0.00 / month</strong></span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Load meSpeak.js WebAssembly TTS Engine from jsdelivr CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/mespeak@2.0.2/mespeak.js" id="mespeak-cdn"></script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
